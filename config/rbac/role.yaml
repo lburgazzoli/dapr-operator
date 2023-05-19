@@ -87,5 +87,27 @@ rules:
   resources:
   - "deployments"
   - "statefulsets"
-
+- apiGroups:
+  - dapr.io
+  resources:
+  - components
+  - components/status
+  - components/finalizers
+  - configurations
+  - configurations/status
+  - configurations/finalizers
+  - resiliencies
+  - resiliencies/status
+  - resiliencies/finalizers
+  - subscriptions
+  - subscriptions/status
+  - subscriptions/finalizers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 #+kubebuilder:scaffold:rules
