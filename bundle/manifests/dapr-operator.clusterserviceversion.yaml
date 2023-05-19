@@ -57,7 +57,7 @@ metadata:
     capabilities: Basic Install
     operators.operatorframework.io/builder: operator-sdk-v1.13.0+git
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
-  name: dapr-operator.v0.0.3
+  name: dapr-operator.v0.0.4
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -93,6 +93,12 @@ spec:
           - events
           verbs:
           - create
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - '*'
         - apiGroups:
           - darp.dapr.io
           resources:
@@ -186,7 +192,7 @@ spec:
                 - --metrics-bind-address=127.0.0.1:8080
                 - --leader-elect
                 - --leader-election-id=dapr-operator
-                image: docker.io/lburgazzoli/dapr-operator:v0.0.3
+                image: docker.io/lburgazzoli/dapr-operator:v0.0.4
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -268,4 +274,4 @@ spec:
   maturity: alpha
   provider:
     name: Dapr
-  version: 0.0.3
+  version: 0.0.4

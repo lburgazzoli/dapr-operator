@@ -13,4 +13,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: docker.io/lburgazzoli/dapr-operator
-  newTag: v0.0.3
+  newTag: v0.0.4

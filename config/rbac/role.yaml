@@ -27,6 +27,13 @@ rules:
   - events
   verbs:
   - create
+# We need to install dapr's CRDs
+- apiGroups:
+  - "apiextensions.k8s.io"
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - "*"
 
 ##
 ## Rules for darp.dapr.io/v1alpha1, Kind: Dapr
