@@ -1,0 +1,22 @@
+# Use the 'create api' subcommand to add watches to this file.
+- group: darp.dapr.io
+  version: v1alpha1
+  kind: Dapr
+  chart: helm-charts/dapr
+- group: darp.io
+  version: v1alpha1
+  kind: Dapr
+  chart: helm-charts/dapr
+- group: dapr.io
+  version: v1alpha1
+  kind: Dapr
+  chart: helm-charts/dapr
+- group: dapr.dapr.io
+  version: v1alpha1
+  kind: Dapr
+  chart: helm-charts/dapr
+- group: charts.dapr.io
+  version: v1alpha1
+  kind: Dapr
+  chart: helm-charts/dapr
+#+kubebuilder:scaffold:watch
