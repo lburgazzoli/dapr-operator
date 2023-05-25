@@ -1,0 +1,366 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "dapr.dapr.io/v1alpha1",
+          "kind": "Dapr",
+          "metadata": {
+            "name": "dapr-sample"
+          },
+          "spec": {
+            "global": {
+              "daprControlPlaneOs": "linux",
+              "dnsSuffix": ".cluster.local",
+              "ha": {
+                "disruption": {
+                  "maximumUnavailable": "25%",
+                  "minimumAvailable": ""
+                },
+                "enabled": false,
+                "replicaCount": 3
+              },
+              "imagePullPolicy": "IfNotPresent",
+              "imagePullSecrets": "",
+              "issuerFilenames": {},
+              "k8sLabels": {
+                "app.kubernetes.io/component": "{{ .Values.component }}",
+                "app.kubernetes.io/managed-by": "helm",
+                "app.kubernetes.io/name": "{{ .Release.Name }}",
+                "app.kubernetes.io/part-of": "dapr",
+                "app.kubernetes.io/version": "{{ .Values.global.tag }}"
+              },
+              "labels": {},
+              "logAsJson": false,
+              "mtls": {
+                "allowedClockSkew": "15m",
+                "enabled": true,
+                "workloadCertTTL": "24h"
+              },
+              "nodeSelector": {},
+              "prometheus": {
+                "enabled": true,
+                "port": 9090
+              },
+              "rbac": {
+                "namespaced": false
+              },
+              "registry": "docker.io/daprio",
+              "tag": "1.10.7",
+              "tolerations": []
+            }
+          }
+        }
+      ]
+    capabilities: Basic Install
+    operators.operatorframework.io/builder: operator-sdk-v1.13.0+git
+    operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
+  name: dapr-operator.v0.0.8
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - kind: Dapr
+      name: daprs.dapr.dapr.io
+      version: v1alpha1
+  description: dapr
+  displayName: Dapr Helm Operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - get
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - '*'
+        - apiGroups:
+          - darp.dapr.io
+          resources:
+          - daprs
+          - daprs/status
+          - daprs/finalizers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - dapr.io
+          resources:
+          - components
+          - components/status
+          - components/finalizers
+          - configurations
+          - configurations/status
+          - configurations/finalizers
+          - resiliencies
+          - resiliencies/status
+          - resiliencies/finalizers
+          - subscriptions
+          - subscriptions/status
+          - subscriptions/finalizers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - '*'
+        - apiGroups:
+          - dapr.io
+          resources:
+          - components
+          - components/status
+          - components/finalizers
+          - configurations
+          - configurations/status
+          - configurations/finalizers
+          - resiliencies
+          - resiliencies/status
+          - resiliencies/finalizers
+          - subscriptions
+          - subscriptions/status
+          - subscriptions/finalizers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: dapr-operator-controller-manager
+      deployments:
+      - name: dapr-operator-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              annotations:
+                kubectl.kubernetes.io/default-container: manager
+              labels:
+                control-plane: controller-manager
+            spec:
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                    - matchExpressions:
+                      - key: kubernetes.io/arch
+                        operator: In
+                        values:
+                        - amd64
+                        - arm64
+                        - ppc64le
+                        - s390x
+                      - key: kubernetes.io/os
+                        operator: In
+                        values:
+                        - linux
+              containers:
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=0
+                image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                  protocol: TCP
+                resources:
+                  limits:
+                    cpu: 500m
+                    memory: 128Mi
+                  requests:
+                    cpu: 5m
+                    memory: 64Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                    - ALL
+              - args:
+                - --health-probe-bind-address=:8081
+                - --metrics-bind-address=127.0.0.1:8080
+                - --leader-elect
+                - --leader-election-id=dapr-operator
+                image: docker.io/lburgazzoli/dapr-operator:v0.0.8
+                livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 8081
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                name: manager
+                readinessProbe:
+                  httpGet:
+                    path: /readyz
+                    port: 8081
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                resources:
+                  limits:
+                    cpu: 500m
+                    memory: 128Mi
+                  requests:
+                    cpu: 10m
+                    memory: 64Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                    - ALL
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: dapr-operator-controller-manager
+              terminationGracePeriodSeconds: 10
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - coordination.k8s.io
+          resources:
+          - leases
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        serviceAccountName: dapr-operator-controller-manager
+    strategy: deployment
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - dapr
+  links:
+  - name: Dapr Operator
+    url: https://dapr-operator.domain
+  maintainers:
+  - email: lburgazzoli@gmail.com
+    name: luca
+  maturity: alpha
+  provider:
+    name: dapr.io
+  version: 0.0.8
