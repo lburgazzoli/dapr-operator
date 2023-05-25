@@ -5,7 +5,7 @@ metadata:
   namespace: openshift-marketplace
 spec:
   sourceType: grpc
-  image: docker.io/lburgazzoli/dapr-operator-catalog:latest
+  image: quay.io/lburgazzoli/dapr-operator-catalog:latest
   displayName: Dapr Catalog
   publisher: dapr.io
   updateStrategy:

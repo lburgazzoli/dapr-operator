@@ -10,4 +10,4 @@ spec:
   name: dapr-operator
   source: dapr-catalog
   sourceNamespace: openshift-marketplace
-  startingCSV: dapr-operator.v0.0.16
+  startingCSV: dapr-operator.v0.0.22
