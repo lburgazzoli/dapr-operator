@@ -5,19 +5,19 @@ on:
   #  branches:
   #    - main
   push:
-    branches:
-      - main
+    tags:
+      - "v*"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 
 env:
-  VERSION: "${GITHUB_SHA}"
+  VERSION: ${{ github.ref_name}}
   IMAGE_TAG_BASE: "quay.io/lburgazzoli/dapr-operator"
 
 jobs:
-  validate:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: check-out
