@@ -39,17 +39,17 @@ jobs:
           export VERSION="${IMAGE_VERSION#v}"
 
           make docker-build
-          #make docker-push
+          make docker-push
       - name: Build Operator Bundle
         run: |
           export VERSION="${IMAGE_VERSION#v}"
 
           make bundle
           make bundle-build
-          #make bundle-push
+          make bundle-push
       - name: Build Operator Catalog
         run: |
           export VERSION="${IMAGE_VERSION#v}"
 
           make catalog-build
-          #make catalog-push
+          make catalog-push
