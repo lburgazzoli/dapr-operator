@@ -1,0 +1,43 @@
+name: validate
+
+on:
+  #pull_request:
+  #  branches:
+  #    - main
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+env:
+  VERSION: "${GITHUB_SHA}"
+  IMAGE_TAG_BASE: "quay.io/lburgazzoli/dapr-operator"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check-out
+        uses: actions/checkout@v3
+      - name: Login to Quay.io
+        uses: docker/login-action@v2
+        with:
+          registry: quay.io
+          username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+      - name: Build Operator Container Image
+        run: |
+          make docker-build
+          #make docker-push
+      - name: Build Operator Bundle
+        run: |
+          make bundle
+          make bundle-build
+          #make bundle-push
+      - name: Build Operator Catalog
+        run: |
+          make catalog-build
+          #make catalog-push
