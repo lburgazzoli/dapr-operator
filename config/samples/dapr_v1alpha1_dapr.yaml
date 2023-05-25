@@ -17,11 +17,11 @@ spec:
     imagePullSecrets: ""
     issuerFilenames: {}
     k8sLabels:
-      app.kubernetes.io/component: '{{ .Values.component }}'
+      app.kubernetes.io/component: "{{ .Values.component }}"
       app.kubernetes.io/managed-by: helm
-      app.kubernetes.io/name: '{{ .Release.Name }}'
+      app.kubernetes.io/name: "{{ .Release.Name }}"
       app.kubernetes.io/part-of: dapr
-      app.kubernetes.io/version: '{{ .Values.global.tag }}'
+      app.kubernetes.io/version: "{{ .Values.global.tag }}"
     labels: {}
     logAsJson: false
     mtls:
@@ -37,5 +37,16 @@ spec:
     registry: docker.io/daprio
     tag: 1.10.7
     tolerations: []
-  
-  
+  dapr_dashboard:
+    runAsNonRoot: true
+  dapr_placement:
+    runAsNonRoot: true
+  dapr_operator:
+    runAsNonRoot: true
+  dapr_sentry:
+    runAsNonRoot: true
+  dapr_sidecar_injector:
+    runAsNonRoot: true
+    logLevel: info
+    debug:
+      enabled: false
