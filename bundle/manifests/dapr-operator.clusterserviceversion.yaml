@@ -74,7 +74,8 @@ metadata:
         }
       ]
     capabilities: Basic Install
-    operators.operatorframework.io/builder: operator-sdk-v1.13.0+git
+    createdAt: "2023-05-25T15:05:47Z"
+    operators.operatorframework.io/builder: operator-sdk-v1.28.1
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
   name: dapr-operator.v0.0.22
   namespace: placeholder
@@ -204,7 +205,15 @@ spec:
           - create
         serviceAccountName: dapr-operator-controller-manager
       deployments:
-      - name: dapr-operator-controller-manager
+      - label:
+          app.kubernetes.io/component: manager
+          app.kubernetes.io/created-by: dapr-operator
+          app.kubernetes.io/instance: controller-manager
+          app.kubernetes.io/managed-by: kustomize
+          app.kubernetes.io/name: deployment
+          app.kubernetes.io/part-of: dapr-operator
+          control-plane: controller-manager
+        name: dapr-operator-controller-manager
         spec:
           replicas: 1
           selector:

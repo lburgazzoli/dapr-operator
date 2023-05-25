@@ -22,12 +22,6 @@ jobs:
     steps:
       - name: check-out
         uses: actions/checkout@v3
-      - name: Install CLI tools from GitHub
-        uses: redhat-actions/openshift-tools-installer@v1
-        with:
-          source: "github"
-          github_pat: ${{ github.token }}
-          operator-sdk: "latest"
       - name: Login to Quay.io
         uses: docker/login-action@v2
         with:
@@ -38,18 +32,14 @@ jobs:
         run: |
           export VERSION="${IMAGE_VERSION#v}"
 
-          make docker-build
-          make docker-push
+          make bundle docker-build docker-push
       - name: Build Operator Bundle
         run: |
           export VERSION="${IMAGE_VERSION#v}"
 
-          make bundle
-          make bundle-build
-          make bundle-push
+          make bundle bundle-build bundle-push
       - name: Build Operator Catalog
         run: |
           export VERSION="${IMAGE_VERSION#v}"
 
-          make catalog-build
-          make catalog-push
+          make catalog-build catalog-push
