@@ -37,16 +37,3 @@ spec:
     registry: docker.io/daprio
     tag: 1.10.7
     tolerations: []
-  dapr_dashboard:
-    runAsNonRoot: true
-  dapr_placement:
-    runAsNonRoot: true
-  dapr_operator:
-    runAsNonRoot: true
-  dapr_sentry:
-    runAsNonRoot: true
-  dapr_sidecar_injector:
-    runAsNonRoot: true
-    logLevel: info
-    debug:
-      enabled: false
