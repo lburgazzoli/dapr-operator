@@ -69,6 +69,7 @@ spec:
         - args:
             - --leader-elect
             - --leader-election-id=dapr-operator
+            - --zap-devel
           image: controller:latest
           name: manager
           securityContext:
