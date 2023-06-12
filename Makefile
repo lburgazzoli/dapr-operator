@@ -49,6 +49,11 @@ endif
 # Image URL to use all building/pushing image targets
 IMG ?= $(IMAGE_TAG_BASE):v$(VERSION)
 
+# dapr helm chart related info
+HELM_CHART_REPO ?= dapr https://dapr.github.io/helm-charts
+HELM_CHART ?= dapr
+HELM_CHART_VERSION ?= 1.11.0
+
 .PHONY: all
 all: docker-build
 
@@ -68,6 +73,19 @@ all: docker-build
 .PHONY: help
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+.PHONY: init
+init: operator-sdk
+	$(OPERATOR_SDK) init \
+		--plugins helm \
+		--domain dapr.io \
+		--group dapr \
+		--version v1alpha1 \
+		--kind Dapr \
+		--helm-chart-repo $(HELM_CHART_REPO) \
+		--helm-chart $(HELM_CHART) \
+		--helm-chart-version $(HELM_CHART_VERSION)
+
 
 ##@ Build
 
