@@ -19,7 +19,10 @@ metadata:
     {{- range $key, $value := .Values.global.k8sLabels }}
     {{ $key }}: {{ tpl $value $ }}
     {{- end }}
-rules: []
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "events"]
+    verbs: ["get"]
 ---
 {{- if eq .Values.global.rbac.namespaced true }}
 kind: RoleBinding
