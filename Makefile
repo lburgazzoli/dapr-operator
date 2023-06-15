@@ -5,6 +5,10 @@
 # - use environment variables to overwrite this value (e.g export VERSION=0.0.2)
 VERSION ?= 0.0.22
 
+MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+PROJECT_PATH := $(patsubst %/,%,$(dir $(MKFILE_PATH)))
+LOCAL_BIN_PATH := ${PROJECT_PATH}/bin
+
 # CHANNELS define the bundle channels used in the bundle.
 # Add a new line here if you would like to change its default config. (E.g CHANNELS = "candidate,fast,stable")
 # To re-generate a bundle for other specific channels without changing the standard setup, you can:
@@ -50,9 +54,10 @@ endif
 IMG ?= $(IMAGE_TAG_BASE):v$(VERSION)
 
 # dapr helm chart related info
-HELM_CHART_REPO ?= dapr https://dapr.github.io/helm-charts
+HELM_CHART_REPO ?= https://dapr.github.io/helm-charts
 HELM_CHART ?= dapr
 HELM_CHART_VERSION ?= 1.11.0
+HELM_CHART_URL ?= https://raw.githubusercontent.com/dapr/helm-charts/master/dapr-$(HELM_CHART_VERSION).tgz
 
 .PHONY: all
 all: docker-build
@@ -86,6 +91,16 @@ init: operator-sdk
 		--helm-chart $(HELM_CHART) \
 		--helm-chart-version $(HELM_CHART_VERSION)
 
+
+.PHONY: update
+update:
+	rm -rf $(PROJECT_PATH)/helm-charts/dapr
+	mkdir -p $(PROJECT_PATH)/helm-charts/dapr
+	
+	curl --location --silent $(HELM_CHART_URL) \
+        | tar xzf - \
+            --directory $(PROJECT_PATH)/helm-charts/dapr \
+            --strip-components=1
 
 ##@ Build
 

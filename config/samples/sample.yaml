@@ -5,35 +5,48 @@ metadata:
 spec:
   # Default values copied from <project_dir>/helm-charts/dapr/values.yaml
   global:
-    daprControlPlaneOs: linux
-    dnsSuffix: .cluster.local
-    ha:
-      disruption:
-        maximumUnavailable: 25%
-        minimumAvailable: ""
-      enabled: false
-      replicaCount: 3
+    registry: docker.io/daprio
+    tag: '1.11.0'
+    dnsSuffix: ".cluster.local"
+    logAsJson: false
     imagePullPolicy: IfNotPresent
     imagePullSecrets: ""
-    issuerFilenames: {}
-    k8sLabels:
-      app.kubernetes.io/component: "{{ .Values.component }}"
-      app.kubernetes.io/managed-by: helm
-      app.kubernetes.io/name: "{{ .Release.Name }}"
-      app.kubernetes.io/part-of: dapr
-      app.kubernetes.io/version: "{{ .Values.global.tag }}"
-    labels: {}
-    logAsJson: false
-    mtls:
-      allowedClockSkew: 15m
-      enabled: true
-      workloadCertTTL: 24h
     nodeSelector: {}
+    tolerations: []
+    rbac:
+      namespaced: false
+    ha:
+      enabled: false
+      replicaCount: 3
+      disruption:
+        minimumAvailable: ""
+        maximumUnavailable: "25%"
     prometheus:
       enabled: true
       port: 9090
-    rbac:
-      namespaced: false
-    registry: docker.io/daprio
-    tag: 1.10.7
-    tolerations: []
+    mtls:
+      enabled: true
+      workloadCertTTL: 24h
+      allowedClockSkew: 15m
+    actors:
+      enabled: true
+    daprControlPlaneOs: linux
+    labels: {}
+    k8sLabels:
+      app.kubernetes.io/name: "{{ .Release.Name }}"
+      app.kubernetes.io/version: "{{ .Values.global.tag }}"
+      app.kubernetes.io/part-of: "dapr"
+      app.kubernetes.io/managed-by: "helm"
+      app.kubernetes.io/component: "{{ .Values.component }}" # Should be set in each subchart
+
+    issuerFilenames: {}
+    ## the issuerFilenames dictionary, if setup, have to contain 3 keys: ca,cert,key
+    # issuerFilenames:
+    #   ca: "ca.crt"
+    #   cert: "tls.crt"
+    #   key: "tls.key"
+    argoRolloutServiceReconciler:
+      enabled: false
+
+    operator:
+      watchdogCanPatchPodLabels: false

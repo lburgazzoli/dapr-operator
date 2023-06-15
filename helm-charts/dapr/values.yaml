@@ -1,6 +1,6 @@
 global:
   registry: docker.io/daprio
-  tag: '1.10.7'
+  tag: '1.11.0'
   dnsSuffix: ".cluster.local"
   logAsJson: false
   imagePullPolicy: IfNotPresent
@@ -22,6 +22,8 @@ global:
     enabled: true
     workloadCertTTL: 24h
     allowedClockSkew: 15m
+  actors:
+    enabled: true
   daprControlPlaneOs: linux
   labels: {}
   k8sLabels:
@@ -30,4 +32,15 @@ global:
     app.kubernetes.io/part-of: "dapr"
     app.kubernetes.io/managed-by: "helm"
     app.kubernetes.io/component: "{{ .Values.component }}" # Should be set in each subchart
+
   issuerFilenames: {}
+  ## the issuerFilenames dictionary, if setup, have to contain 3 keys: ca,cert,key
+  # issuerFilenames:
+  #   ca: "ca.crt"
+  #   cert: "tls.crt"
+  #   key: "tls.key"
+  argoRolloutServiceReconciler:
+    enabled: false
+
+  operator:
+    watchdogCanPatchPodLabels: false
