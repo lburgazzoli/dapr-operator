@@ -241,3 +241,24 @@ catalog-build: opm ## Build a catalog image.
 .PHONY: catalog-push
 catalog-push: ## Push a catalog image.
 	$(MAKE) docker-push IMG=$(CATALOG_IMG)
+
+
+
+.PHONY: openshift/deploy/catalog
+openshift/deploy/catalog: ## Deploy catalog.
+	kubectl apply -f config/samples/catalog.yaml
+
+.PHONY:  openshift/deploy/subscritpion
+openshift/deploy/subscritpion: ## Deploy subscritpion.
+	kubectl apply -f config/samples/subscription.yaml
+	
+.PHONY: openshift/deploy/dapr
+openshift/deploy/dapr: ## Deploy sample.
+	kubectl apply -f config/samples/sample.yaml
+
+.PHONY: openshift/undeploy
+openshift/undeploy: ## Deploy sample.
+	kubectl delete --ignore-not-found=true -f config/samples/sample.yaml
+	kubectl delete --ignore-not-found=true -f config/samples/subscription.yaml
+	kubectl delete --ignore-not-found=true -f config/samples/catalog.yaml
+

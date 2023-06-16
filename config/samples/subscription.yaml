@@ -1,6 +1,6 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
-metadata:   
+metadata:
   name: dapr-operator
   namespace: openshift-operators
 spec:
@@ -9,4 +9,4 @@ spec:
   name: dapr-operator
   source: dapr-catalog
   sourceNamespace: openshift-marketplace
-  startingCSV: dapr-operator.v0.0.27
+  startingCSV: dapr-operator.v1.11.0-2

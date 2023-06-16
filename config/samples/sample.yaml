@@ -3,10 +3,9 @@ kind: Dapr
 metadata:
   name: dapr-sample
 spec:
-  # Default values copied from <project_dir>/helm-charts/dapr/values.yaml
   global:
     registry: docker.io/daprio
-    tag: '1.11.0'
+    tag: "1.11.0"
     dnsSuffix: ".cluster.local"
     logAsJson: false
     imagePullPolicy: IfNotPresent
